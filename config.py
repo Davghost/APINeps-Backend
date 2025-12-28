@@ -9,14 +9,21 @@ class Config:
    SECRET_KEY = os.environ.get("SECRET_KEY")
    APP_TITLE = "Flask REST API Course"
 
-   SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-   #Chave Secreta JWT localizada no arquivo ".env"
    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
-   #Localização do Token
    JWT_TOKEN_LOCATION = ["headers"]
 
    @staticmethod
    def init_app(app):
       pass
+   
+# Configuração para Desenvolvimento
+class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
+
+# Configuração para Produção
+class ProductionConfig(Config):
+    uri = os.getenv("POSTGRES_URL", "") 
+    uri = uri.replace("postgresql://", "postgresql+psycopg://", 1)
+
+    SQLALCHEMY_DATABASE_URI = uri

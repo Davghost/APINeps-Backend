@@ -5,6 +5,7 @@ from sqlalchemy import select
 from spectree import SpecTree, SecurityScheme
 from config import Config
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -24,10 +25,11 @@ api = SpecTree(
    security={"api_key": []},
 )
 
-def create_app():
+def create_app(config_name):
    app = Flask(__name__)
+   CORS(app)
 
-   app.config.from_object(Config)
+   app.config.from_object(config_name)
    jwt.init_app(app)
 
    db.init_app(app)
